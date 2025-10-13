@@ -1020,6 +1020,125 @@
     </div>
 </div>
 
+
+<!-- Teklifler sekmesi -->
+<div id="proposals" class="tab-content">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div>
+            <h2 style="margin: 0; color: var(--primary);">📑 Teklifler</h2>
+            <p style="margin: 5px 0 0 0; color: #6b7280;">Başvuru dokümanını yükleyerek veya manuel teklif oluşturabilirsiniz.</p>
+        </div>
+        <button class="btn btn-primary" onclick="openAddProposalModal()">
+            ➕ Teklif Oluştur
+        </button>
+    </div>
+    <div class="card">
+        <h3>📋 Teklif Listesi</h3>
+        <table id="proposalsTable">
+            <thead>
+                <tr>
+                    <th>Teklif No</th>
+                    <th>Firma</th>
+                    <th>Başvuru Tarihi</th>
+                    <th>Tutar</th>
+                    <th>Durum</th>
+                    <th>İşlemler</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Teklif ekleme/düzenleme modalı -->
+<div id="proposalFormModal" class="modal">
+    <div class="modal-content" style="max-width: 900px; max-height: 95vh; overflow-y: auto;">
+        <div class="modal-header">
+            <h3 id="proposalFormModalTitle">➕ Teklif Oluştur</h3>
+            <button class="close-modal" onclick="closeProposalFormModal()">✖</button>
+        </div>
+        <div style="padding: 20px;">
+            <form id="proposalForm">
+                <div class="alert alert-info">
+                    <strong>Başvuru PDF veya Görsel Yükle</strong>
+                    <p style="font-size: 0.9em; margin-top: 5px;">Başvuru.pdf veya başvuru formunun görselini yükleyin. Otomatik parse edilecek, eksik/hatalı alanlar manuel düzeltilebilir.</p>
+                </div>
+                <div class="form-group">
+                    <input type="file" id="proposalDocument" accept=".pdf,image/png,image/jpeg" onchange="handleDocumentUpload(event)">
+                </div>
+                <div id="documentParseResult" style="margin-bottom: 15px;"></div>
+                <div class="alert alert-success">
+                    <strong>Teklif Bilgileri</strong>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Teklif No</label>
+                        <input type="text" id="proposalNumber" placeholder="Örn: 2025-Ç-127" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Başvuru No</label>
+                        <input type="text" id="proposalApplicationNo" required>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Başvuru Tarihi</label>
+                        <input type="text" id="proposalApplicationDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Firma/Tesis Adı</label>
+                        <input type="text" id="proposalCompany" required onchange="checkCompanyMatch()">
+                        <span id="companyMatchWarning" style="color:red;display:none;">Cari ile firma adı eşleşmiyor!</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Cari Hesap Seç</label>
+                    <select id="proposalCari" onchange="checkCompanyMatch()">
+                        <option value="">Cari seçiniz</option>
+                        <!-- JS ile cariler doldurulacak -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Laboratuvar</label>
+                    <input type="text" id="proposalLab">
+                </div>
+                <div class="form-group">
+                    <label>Parametreler <button type="button" class="btn btn-info btn-sm" onclick="addParameterRow()">➕ Ekstra Parametre</button></label>
+                    <table id="parametersTable" style="width:100%; margin-top:10px;">
+                        <thead>
+                            <tr>
+                                <th>Parametre</th>
+                                <th>Adet</th>
+                                <th>Birim Fiyat</th>
+                                <th>Toplam</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>KDV Hariç Toplam</label>
+                        <input type="text" id="proposalTotal">
+                    </div>
+                    <div class="form-group">
+                        <label>İndirimli KDV Hariç Toplam</label>
+                        <input type="text" id="proposalDiscountedTotal">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Açıklamalar</label>
+                    <textarea id="proposalNotes" rows="3"></textarea>
+                </div>
+                <button type="button" class="btn btn-success" onclick="saveProposal()">
+                    Kaydet
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
 <!-- CARİ HESAP EKLEME/DÜZENLEME MODAL -->
 <div id="accountFormModal" class="modal">
     <div class="modal-content" style="max-width: 900px; max-height: 95vh; overflow-y: auto;">
@@ -2679,125 +2798,6 @@
         </div>
     </div>
 </div>
-
-<!-- Teklifler sekmesi -->
-<div id="proposals" class="tab-content">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <div>
-            <h2 style="margin: 0; color: var(--primary);">📑 Teklifler</h2>
-            <p style="margin: 5px 0 0 0; color: #6b7280;">Başvuru dokümanını yükleyerek veya manuel teklif oluşturabilirsiniz.</p>
-        </div>
-        <button class="btn btn-primary" onclick="openAddProposalModal()">
-            ➕ Teklif Oluştur
-        </button>
-    </div>
-    <div class="card">
-        <h3>📋 Teklif Listesi</h3>
-        <table id="proposalsTable">
-            <thead>
-                <tr>
-                    <th>Teklif No</th>
-                    <th>Firma</th>
-                    <th>Başvuru Tarihi</th>
-                    <th>Tutar</th>
-                    <th>Durum</th>
-                    <th>İşlemler</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-</div>
-
-<!-- Teklif ekleme/düzenleme modalı -->
-<div id="proposalFormModal" class="modal">
-    <div class="modal-content" style="max-width: 900px; max-height: 95vh; overflow-y: auto;">
-        <div class="modal-header">
-            <h3 id="proposalFormModalTitle">➕ Teklif Oluştur</h3>
-            <button class="close-modal" onclick="closeProposalFormModal()">✖</button>
-        </div>
-        <div style="padding: 20px;">
-            <form id="proposalForm">
-                <div class="alert alert-info">
-                    <strong>Başvuru PDF veya Görsel Yükle</strong>
-                    <p style="font-size: 0.9em; margin-top: 5px;">Başvuru.pdf veya başvuru formunun görselini yükleyin. Otomatik parse edilecek, eksik/hatalı alanlar manuel düzeltilebilir.</p>
-                </div>
-                <div class="form-group">
-                    <input type="file" id="proposalDocument" accept=".pdf,image/png,image/jpeg" onchange="handleDocumentUpload(event)">
-                </div>
-                <div id="documentParseResult" style="margin-bottom: 15px;"></div>
-                <div class="alert alert-success">
-                    <strong>Teklif Bilgileri</strong>
-                </div>
-                <div class="grid-2">
-                    <div class="form-group">
-                        <label>Teklif No</label>
-                        <input type="text" id="proposalNumber" placeholder="Örn: 2025-Ç-127" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Başvuru No</label>
-                        <input type="text" id="proposalApplicationNo" required>
-                    </div>
-                </div>
-                <div class="grid-2">
-                    <div class="form-group">
-                        <label>Başvuru Tarihi</label>
-                        <input type="text" id="proposalApplicationDate" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Firma/Tesis Adı</label>
-                        <input type="text" id="proposalCompany" required onchange="checkCompanyMatch()">
-                        <span id="companyMatchWarning" style="color:red;display:none;">Cari ile firma adı eşleşmiyor!</span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Cari Hesap Seç</label>
-                    <select id="proposalCari" onchange="checkCompanyMatch()">
-                        <option value="">Cari seçiniz</option>
-                        <!-- JS ile cariler doldurulacak -->
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Laboratuvar</label>
-                    <input type="text" id="proposalLab">
-                </div>
-                <div class="form-group">
-                    <label>Parametreler <button type="button" class="btn btn-info btn-sm" onclick="addParameterRow()">➕ Ekstra Parametre</button></label>
-                    <table id="parametersTable" style="width:100%; margin-top:10px;">
-                        <thead>
-                            <tr>
-                                <th>Parametre</th>
-                                <th>Adet</th>
-                                <th>Birim Fiyat</th>
-                                <th>Toplam</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-                <div class="grid-2">
-                    <div class="form-group">
-                        <label>KDV Hariç Toplam</label>
-                        <input type="text" id="proposalTotal">
-                    </div>
-                    <div class="form-group">
-                        <label>İndirimli KDV Hariç Toplam</label>
-                        <input type="text" id="proposalDiscountedTotal">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Açıklamalar</label>
-                    <textarea id="proposalNotes" rows="3"></textarea>
-                </div>
-                <button type="button" class="btn btn-success" onclick="saveProposal()">
-                    Kaydet
-                </button>
-            </form>
-        </div>
-    </div>
-</div>
-
 <script>
 
 // SATIR 2753-2780
@@ -12614,20 +12614,31 @@ function parseProposalContent(text) {
     let company = (text.match(/Tesis[:\s]*([A-ZÇĞİÖŞÜa-zçğıöşü0-9(). -]+)/) || [])[1] || "";
     let lab = (text.match(/Laboratuvar[:\s]*([A-ZÇĞİÖŞÜa-zçğıöşü0-9(). -]*)/) || [])[1] || "";
 
-    // Parametreler tablosu parse (örnek regex ile)
+    // Parametreler tablosunu satır satır ayır
     let paramRows = [];
-    let paramRegex = /([A-ZÇĞİÖŞÜa-zçğıöşü().,\s-]+)\s+(\d+)\s+([\d.,]+)\s+([\d.,]+)\s*₺/g;
-    let match;
-    while ((match = paramRegex.exec(text)) !== null) {
-        paramRows.push({
-            name: match[1].trim(),
-            adet: match[2],
-            price: match[3].replace(/\D/g,""),
-            total: match[4].replace(/\D/g,"")
-        });
+    // Tablo kısmını bul
+    let tableStart = text.indexOf("Parametreler");
+    let tableEnd = text.indexOf("Taban Fiyat");
+    if (tableStart > -1 && tableEnd > tableStart) {
+        let tableText = text.substring(tableStart, tableEnd);
+        let lines = tableText.split("\n").filter(l => l.trim().length > 0);
+        // Satırları teker teker çöz
+        for (let line of lines) {
+            // Sadece tablo satırları (parametre - adet - fiyat - toplam) olanları yakala
+            // Örn: Hız        47    1.430,00 ₺    67.210,00 ₺
+            let cellRegex = /^(.*?)\s+(\d+)\s+([\d.,]+)\s*₺?\s+([\d.,]+)\s*₺?$/;
+            let m = line.match(cellRegex);
+            if (m) {
+                paramRows.push({
+                    name: m[1].trim(),
+                    adet: m[2],
+                    price: m[3].replace(/\./g,'').replace(',','.'),
+                    total: m[4].replace(/\./g,'').replace(',','.')
+                });
+            }
+        }
     }
 
-    // Alanlara aktar
     document.getElementById('proposalApplicationNo').value = appNo.trim();
     document.getElementById('proposalApplicationDate').value = appDate.trim();
     document.getElementById('proposalCompany').value = company.trim();
